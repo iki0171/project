@@ -1,0 +1,36 @@
+// textarea
+// 텍스트 영역의 자동 크기 조정에 관련된 내용
+// 참조 링크 https://stackoverflow.com/questions/70810463/question-for-auto-resizing-textarea-using-vuejs
+<template>
+  <div class="inp">
+    <textarea
+      v-model="aa"
+      ref="textarea"
+      class="inptext"
+      row="1"
+      @input="bb()"
+      placeholder="글입력"
+    />
+  </div>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+
+  const aa = ref('');
+  const textarea = ref(null);
+
+  const bb = () => {
+    textarea.value.style.height = 'auto';
+    textarea.value.style.height = `${textarea.value.scrollHeight}px`;
+  };
+</script>
+<style>
+  textarea {
+    width: 100%;
+    border: 1px solid red;
+    min-height: 120px !important;
+    max-height: 400px !important;
+    overflow: auto;
+  }
+</style>
