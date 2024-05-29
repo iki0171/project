@@ -1,0 +1,21 @@
+// vue 페이지 이동 시 스크롤 위치 상단 적용
+// 스크롤이 내려가있는 상태에서 라우터를 통해 다른 페이지로 이동하면 스크롤이 내려가있는 상태로 페이지만 바뀌는 현상
+
+
+
+// src > router > index.ts
+// 함수 추가 전
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
+});
+
+
+// 함수 추가 후
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
+  scrollBehavior(){
+    return { top: 0 }
+  },
+});
