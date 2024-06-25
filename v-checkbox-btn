@@ -1,0 +1,155 @@
+<script setup>
+import { ref, reactive, watch } from 'vue';
+
+//체크박스 사용예시
+const items = reactive([
+    { id: 1, name: '시장분석', checked: false }, 
+    { id: 2, name: '상권분석', checked: false }, 
+    { id: 3, name: '고객분석', checked: false }, 
+    { id: 4, name: '관광분석', checked: false }, 
+    { id: 5, name: '지역경제', checked: false }, 
+    { id: 6, name: '대안신용', checked: false }, 
+    { id: 7, name: '심사전략', checked: false }, 
+    { id: 8, name: '신용모형', checked: false }, 
+    { id: 9, name: '마케팅', checked: false }, 
+]);
+
+const selectAll = ref(false);
+const toggleSelectAll = (value) => {
+    items.forEach(item => item.checked = value);
+};
+
+watch(items, () => {
+    const allChecked = items.every(item => item.checked);
+    if (allChecked) {
+        selectAll.value = true;
+    } else {
+        selectAll.value = false;
+    }
+}, { deep: true });
+
+
+  //v-btn사용 예시
+  const items1 = ref([
+    { label: '전체', selected: false },
+    { label: '시장분석', selected: false },
+    { label: '상권분석', selected: false },
+    { label: '고객분석', selected: false },
+    { label: '관광분석', selected: false },
+    { label: '지역경제', selected: false },
+    { label: '대안신용', selected: false },
+    { label: '심사전략', selected: false },
+    { label: '신용모형', selected: false },
+    { label: '마케팅', selected: false },
+  ]);
+  
+  const toggleButton = (index) => {
+    if (index === 0) {
+      if (items1.value[0].selected) {
+        // 전체 버튼이 선택된 상태에서 클릭 시 모든 버튼 해제
+        items1.value.forEach(item => item.selected = false);
+      } else {
+        // 전체 버튼이 선택되지 않은 상태에서 클릭 시 모든 버튼 선택
+        items1.value.forEach(item => item.selected = true);
+      }
+    } else {
+      // 개별 버튼 토글
+      if (!items1.value[index].selected) {
+        items1.value[index].selected = true;
+      }else{
+        items1.value[index].selected = false;
+      }
+  
+      // 전체 버튼 상태 업데이트
+      const allOtherSelected = items1.value.slice(1).every(item => item.selected);
+      items1.value[0].selected = allOtherSelected;
+    }
+  };
+
+</script>
+
+<div class="search-row">
+    <div class="search-title">분석 목적</div>
+    <!--체크박스(allCheckbox)-->
+    <div class="search-form filtering">
+        <v-checkbox
+            :model-value="selectAll.value"
+            @update:model-value="toggleSelectAll"                        
+            label="전체"
+            hide-details
+            class="chk-btn"
+            :class="selectAll ? 'v-btn--active': ''"
+        />
+        <v-checkbox
+            v-for="item in items"
+            :key="item.id"
+            :model-value="item.checked"
+            @update:model-value="value => (item.checked = value)"
+            :label="item.name"
+            hide-details
+            class="chk-btn"
+            :class="item.checked ? 'v-btn--active' : ''"
+        />
+    </div>
+
+    <!-- v-btn -->
+    <div class="btn-group">
+      <v-btn
+        v-for="(item, index) in items1" 
+        :key="index"
+        @click="toggleButton(index)"
+        :class="{ 'v-btn--active': item.selected }"
+        rounded="xl"
+        min-width="auto"
+      >
+        {{ item.label }}
+      </v-btn>
+    </div>
+</div>
+
+<style scoped lang="scss">
+.search-form {
+  flex: 1;
+  padding: 0 2.4rem;
+  border-left: 1px solid #E5E5E5;
+}
+// filter-btn
+.filtering {
+    display: flex;
+    gap: 0.8rem;
+    .chk-btn {
+        border-radius: 4.8rem;
+        background-color: #F2F3F6;
+        cursor: pointer;
+        .v-selection-control--density-default {
+            --v-selection-control-size: auto;
+            .v-selection-control__wrapper {
+                opacity: 0;
+                .v-icon {
+                    width: 0;
+                    min-width: auto;
+                    height: 0;
+                }
+            }
+            .v-label {
+                padding: 1rem 1.6rem;
+                color: #666;
+                font-size: 1.6rem;
+                font-weight: 400;
+                line-height: 100%;
+                white-space: nowrap;
+            }
+        }
+        &.v-input--density-default:not(.v-autocomplete--multiple) {
+            --v-input-control-height: auto;
+            --v-input-padding-top: 0;
+        }
+        &.v-btn--active {
+            background-color: #383B5A;
+            .v-selection-control--density-default .v-label {
+                color: #fff;
+            }
+        }
+    }
+}
+</style>
